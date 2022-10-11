@@ -19,8 +19,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: RoutsName.login,
-      onGenerateRoute: Routs.generateRoute
-    );
+        initialRoute: RoutsName.login, onGenerateRoute: Routs.generateRoute);
   }
 }
