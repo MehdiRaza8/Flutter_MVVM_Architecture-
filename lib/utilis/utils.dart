@@ -5,6 +5,12 @@ import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:another_flushbar/flushbar_route.dart';
 
 class Utils {
+  static void fieldFocusChange(
+      BuildContext context, FocusNode current, FocusNode nextFocus) {
+    current.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
+  }
+
   static toastMessage(String message) {
     Fluttertoast.showToast(msg: message);
   }
