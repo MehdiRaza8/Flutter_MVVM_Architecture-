@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mvvm/resources/Components/round_button.dart';
 import 'package:mvvm/utilis/utils.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -9,6 +10,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  ValueNotifier<bool> _obsecurepassword = ValueNotifier<bool>(true);
   TextEditingController _emailcontroller = TextEditingController();
   TextEditingController _passwordcontroller = TextEditingController();
 
@@ -16,7 +18,12 @@ class _LoginScreenState extends State<LoginScreen> {
   FocusNode _passwordFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height * 1;
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SafeArea(
@@ -40,18 +47,45 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 height: 20,
               ),
-              TextFormField(
-                focusNode: _passwordFocusNode,
-                obscureText: true,
-                obscuringCharacter: '*',
-                controller: _passwordcontroller,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  hintText: "Password",
-                  label: Text('Password'),
-                  suffixIcon: Icon(Icons.visibility_off_outlined),
-                ),
+              ValueListenableBuilder(
+                  valueListenable: _obsecurepassword,
+                  builder: (context, value, child) {
+                    return TextFormField(
+                      focusNode: _passwordFocusNode,
+                      obscureText: _obsecurepassword.value,
+                      obscuringCharacter: '*',
+                      controller: _passwordcontroller,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                          hintText: "Password",
+                          label: Text('Password'),
+                          prefixIcon: Icon(Icons.lock),
+                          suffixIcon: InkWell(
+                              onTap: () {
+                                _obsecurepassword.value =
+                                    !_obsecurepassword.value;
+                              },
+                              child: Icon(_obsecurepassword.value
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility))),
+                    );
+                  }),
+              SizedBox(
+                height: height * .1,
               ),
+              RoundedButton(
+                title: 'Login',
+                onPress: () {
+                  if (_emailcontroller.text.isEmpty) {
+                    Utils.flashBarErrorMessage('Please Enter Email', context);
+                  } else if (_passwordcontroller.text.isEmpty) {
+                    Utils.flashBarErrorMessage('Please Password', context);
+                  } else if (_passwordcontroller.text.length < 6) {
+                    Utils.flashBarErrorMessage(
+                        'Atleast 6 Charactor Password', context);
+                  } else {}
+                },
+              )
             ],
           ),
         ),
