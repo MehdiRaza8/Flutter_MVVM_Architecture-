@@ -20,7 +20,8 @@ class Utils {
         context: context,
         flushbar: Flushbar(
           message: message,
-          backgroundColor: Colors.grey,
+          backgroundColor: Colors.red,
+          icon: Icon(Icons.error),
           flushbarPosition: FlushbarPosition.TOP,
           title: 'sad',
         )..show(context));

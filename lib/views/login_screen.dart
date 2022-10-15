@@ -1,6 +1,10 @@
+// ignore_for_file: prefer_final_fields
+
 import 'package:flutter/material.dart';
 import 'package:mvvm/resources/Components/round_button.dart';
 import 'package:mvvm/utilis/utils.dart';
+import 'package:mvvm/view_Models/auth_view_model.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,12 +20,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
   FocusNode _emailFocusNode = FocusNode();
   FocusNode _passwordFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _obsecurepassword.dispose();
+    _emailcontroller.dispose();
+    _passwordcontroller.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final authviewModel = Provider.of<AuthviewModel>(context);
     final height = MediaQuery.of(context).size.height * 1;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Text('Login'),
         centerTitle: true,
       ),
       body: Padding(
@@ -44,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       context, _emailFocusNode, _passwordFocusNode);
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               ValueListenableBuilder(
@@ -58,8 +72,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                           hintText: "Password",
-                          label: Text('Password'),
-                          prefixIcon: Icon(Icons.lock),
+                          label: const Text('Password'),
+                          prefixIcon: const Icon(Icons.lock),
                           suffixIcon: InkWell(
                               onTap: () {
                                 _obsecurepassword.value =
@@ -83,7 +97,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   } else if (_passwordcontroller.text.length < 6) {
                     Utils.flashBarErrorMessage(
                         'Atleast 6 Charactor Password', context);
-                  } else {}
+                  } else {
+                    var data = {
+                      'email': _emailcontroller.text.toString(),
+                      'password': _passwordcontroller.text.toString()
+                    };
+                    authviewModel.loginApi(data, context);
+                    print('data');
+                  }
                 },
               )
             ],

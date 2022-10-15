@@ -6,6 +6,7 @@ import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:another_flushbar/flushbar_route.dart';
 import 'package:mvvm/utilis/Routs/routs.dart';
 import 'package:mvvm/utilis/Routs/routs_name.dart';
+import 'package:mvvm/view_Models/auth_view_model.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -18,7 +19,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        initialRoute: RoutsName.login, onGenerateRoute: Routs.generateRoute);
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => AuthviewModel(),
+        )
+      ],
+      child: MaterialApp(
+          initialRoute: RoutsName.login, onGenerateRoute: Routs.generateRoute),
+    );
   }
 }
